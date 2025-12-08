@@ -1,22 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Vanta.js dots background
-    VANTA.DOTS({
-        el: "#vanta-bg",
-        mouseControls: false,
-        touchControls: false,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00,
-        color: 0xff8820,
-        color2: 0xff8820,
-        backgroundColor: 0x222222,
-        size: 3,
-        spacing: 20
-    });
-
-    // Three.js setup
+    // Three.js subtle background particles
     const container = document.getElementById('three-container');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -26,103 +9,95 @@ document.addEventListener('DOMContentLoaded', function() {
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    // Create floating particles
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particleCount = 500;
+    const positions = new Float32Array(particleCount * 3);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
+    for (let i = 0; i < particleCount * 3; i += 3) {
+        positions[i] = (Math.random() - 0.5) * 20;
+        positions[i + 1] = (Math.random() - 0.5) * 20;
+        positions[i + 2] = (Math.random() - 0.5) * 20;
+    }
 
-    const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    backLight.position.set(-5, -5, -5);
-    scene.add(backLight);
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // Load font and create 3D text
-    const fontLoader = new THREE.FontLoader();
-    fontLoader.load('https://cdn.jsdelivr.net/npm/three@0.134.0/examples/fonts/helvetiker_bold.typeface.json', function(font) {
-        const textGeometry = new THREE.TextGeometry('Welcome', {
-            font: font,
-            size: 1,
-            height: 0.4,  // This is the real 3D depth
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 0.03,
-            bevelSize: 0.02,
-            bevelOffset: 0,
-            bevelSegments: 5
-        });
-
-        // Center the text
-        textGeometry.computeBoundingBox();
-        textGeometry.center();
-
-        const textMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            metalness: 0.3,
-            roughness: 0.4
-        });
-
-        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(0, 0, 0);
-        scene.add(textMesh);
-
-        window.textMesh = textMesh;
+    const particlesMaterial = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.02,
+        transparent: true,
+        opacity: 0.8
     });
+
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
 
     camera.position.z = 5;
-    camera.position.y = 0;
-    camera.position.x = 0;
 
-    // Drag to rotate
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-    let rotationY = 0;
-    let rotationX = 0;
-
-    container.addEventListener('mousedown', function(e) {
-        isDragging = true;
-        previousMousePosition = { x: e.clientX, y: e.clientY };
-    });
-
-    document.addEventListener('mouseup', function() {
-        isDragging = false;
-    });
+    // Mouse movement effect
+    let mouseX = 0;
+    let mouseY = 0;
 
     document.addEventListener('mousemove', function(e) {
-        if (!isDragging || !window.textMesh) return;
-
-        const deltaX = e.clientX - previousMousePosition.x;
-        const deltaY = e.clientY - previousMousePosition.y;
-
-        rotationY += deltaX * 0.01;
-        rotationX += deltaY * 0.01;
-        rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
-
-        window.textMesh.rotation.y = rotationY;
-        window.textMesh.rotation.x = rotationX;
-
-        previousMousePosition = { x: e.clientX, y: e.clientY };
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
-    // Scroll to zoom
-    container.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        camera.position.z += e.deltaY * 0.01;
-        camera.position.z = Math.max(2, Math.min(20, camera.position.z));
-    }, { passive: false });
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
 
-    // Handle window resize
+        // Slow rotation
+        particles.rotation.x += 0.0005;
+        particles.rotation.y += 0.0005;
+
+        // Mouse influence
+        particles.rotation.x += mouseY * 0.0005;
+        particles.rotation.y += mouseX * 0.0005;
+
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // Handle resize
     window.addEventListener('resize', function() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Animation loop
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-    }
-    animate();
+    // Scroll-triggered fade-in animations
+    const fadeElements = document.querySelectorAll('.fade-in');
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.2
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    fadeElements.forEach(el => observer.observe(el));
+
+    // Parallax effect on scroll
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const heroContent = document.querySelector('.hero-content');
+        const scrollHint = document.querySelector('.scroll-hint');
+
+        if (heroContent) {
+            heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+            heroContent.style.opacity = 1 - (scrolled / 500);
+        }
+
+        if (scrollHint) {
+            scrollHint.style.opacity = 1 - (scrolled / 300);
+        }
+    });
 });
