@@ -37,11 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load font and create 3D text
     const fontLoader = new THREE.FontLoader();
+    const isMobile = window.innerWidth < 768;
     fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) {
         const textGeometry = new THREE.TextGeometry('DeyVision', {
             font: font,
-            size: 0.7,
-            height: 0.4,
+            size: isMobile ? 0.4 : 0.7,
+            height: isMobile ? 0.2 : 0.4,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0.03,
