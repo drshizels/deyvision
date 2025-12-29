@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Vanta.js topology background
-    VANTA.TOPOLOGY({
+    // Initialize Vanta.js net background
+    VANTA.NET({
         el: "#vanta-bg",
         mouseControls: true,
         touchControls: true,
@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        color: 0x89964e,
-        backgroundColor: 0x222222
+        color: 0x389b0f,
+        backgroundColor: 0x0
     });
 
     // Three.js 3D Text Setup
