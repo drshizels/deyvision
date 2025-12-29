@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
     fontLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) {
         const textGeometry = new THREE.TextGeometry('DeyVision', {
             font: font,
-            size: isMobile ? 0.28 : 0.7,
-            height: isMobile ? 0.15 : 0.4,
+            size: isMobile ? 0.2 : 0.7,
+            height: isMobile ? 0.1 : 0.4,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0.03,
