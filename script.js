@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
     VANTA.DOTS({
         el: "#vanta-bg",
         mouseControls: true,
-        touchControls: true,
+        touchControls: false,
         gyroControls: false,
         minHeight: 200.00,
         minWidth: 200.00,
         scale: 1.00,
-        scaleMobile: 1.00,
-        size: 3.90,
-        spacing: 31.00
+        scaleMobile: 0.75,
+        size: 2.50,
+        spacing: 45.00
     });
 
     // Scroll-triggered fade-in animations
