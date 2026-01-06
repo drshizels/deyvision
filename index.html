@@ -119,13 +119,43 @@
         </div>
     </section>
 
+    <!-- Personal Reel -->
+    <section class="section video-section">
+        <div class="section-content">
+            <h2 class="fade-in">PERSONAL REEL</h2>
+            <div class="reel-container">
+                <iframe src="https://www.youtube.com/embed/tcpVfzj1R-M" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <p>DeyVision // Copyright © 2025</p>
         <p>All Rights Reserved</p>
     </footer>
 
-    <script src="script.js?v=3"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+    <script>
+        VANTA.DOTS({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xffffff,
+            color2: 0xffffff,
+            backgroundColor: 0x222222,
+            size: 2.0,
+            spacing: 20.00,
+            showLines: false
+        });
+    </script>
+    <script src="script.js?v=4"></script>
 </body>
 </html>
 
